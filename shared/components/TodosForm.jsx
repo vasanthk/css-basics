@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+
 export default class TodosForm extends React.Component {
+  static propTypes = {
+    createTodo: PropTypes.func.isRequired
+  };
+
   handleSubmit = () => {
     let node = this.refs['todo-input'].getDOMNode();
 
@@ -10,9 +15,9 @@ export default class TodosForm extends React.Component {
 
   render() {
     return (
-      <div id="todo-form">
-        <input type="text" placeholder="type todo" ref="todo-input"/>
-        <input type="submit" value="OK!" onClick={this.handleSubmit}/>
+      <div>
+        <input type="text" placeholder="type todo" ref="todo-input" />
+        <input type="submit" value="OK!" onClick={this.handleSubmit} />
       </div>
     );
   }
