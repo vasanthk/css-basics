@@ -1,28 +1,25 @@
-import React from 'react';
-import { Router } from 'react-router';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
-import routes from 'routes';
-import { createStore, combineReducers } from 'redux';
-import { Provider } from 'react-redux';
-import * as reducers from 'reducers';
-import { fromJS } from 'immutable';
+import React                from 'react';
+import { Router }           from 'react-router';
+import createBrowserHistory from 'history/lib/createBrowserHistory'
+import { Provider }         from 'react-redux';
+import { fromJS }           from 'immutable';
+import * as reducers        from 'reducers';
+import routes               from 'routes';
+import promiseMiddleware    from 'lib/promiseMiddleware';
+import immutifyState        from 'lib/immutifyState';
+import { createStore, combineReducers, applyMiddleware }  from 'redux';
+
+const initialState = immutifyState(window.__INITIAL_STATE__);
 
 const history = createBrowserHistory();
 
-let initialState = window.__INITIAL_STATE__;
-
-// Transform into Immutable.js collections, but leave top level keys untouched in Redux.
-Object.keys(initialState).forEach(key => {
-  initialState[key] = fromJS(initialState[key]);
-});
-
 const reducer = combineReducers(reducers);
-const store = createStore(reducer, initialState);
+const store   = applyMiddleware(promiseMiddleware)(createStore)(reducer, initialState);
 
 React.render(
   <Provider store={store}>
     {() =>
-      <Router children={routes} history={history}/>
+      <Router children={routes} history={history} />
     }
   </Provider>,
   document.getElementById('react-view')
